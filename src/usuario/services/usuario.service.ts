@@ -47,7 +47,7 @@ export class UsuarioService {
         if (buscaUsuario)
             throw new HttpException("O Usuario já existe!", HttpStatus.BAD_REQUEST);
 
-        usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha)
+        usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha);
         return await this.usuarioRepository.save(usuario);
 
     }

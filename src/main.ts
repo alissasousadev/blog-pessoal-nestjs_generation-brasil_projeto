@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-  .setTitle('Blog Pessoal')
+  .setTitle('Alissa Sousa')
   .setDescription('Projeto Blog Pessoal')
   .setContact("Generation Brasil","http://www.generationbrasil.online","generation@email.com")
   .setVersion('1.0')
@@ -19,9 +19,7 @@ async function bootstrap() {
   process.env.TZ = '-03:00'
 
   app.useGlobalPipes(new ValidationPipe());
-
   app.enableCors();
-
   await app.listen(process.env.PORT ?? 4000);
   
 }

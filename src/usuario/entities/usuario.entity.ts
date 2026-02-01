@@ -20,9 +20,9 @@ export class Usuario {
     @Column({length: 255, nullable: false })
     @ApiProperty({example: "email@email.com.br"})
     usuario: string
-
-    @MinLength(8)
+    
     @IsNotEmpty()
+    @MinLength(8)
     @Column({length: 255, nullable: false }) 
     @ApiProperty()
     senha: string

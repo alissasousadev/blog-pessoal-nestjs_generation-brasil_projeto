@@ -15,36 +15,41 @@ export class AuthService{
 
     async validateUser(username: string, password: string): Promise<any>{
 
-        const buscaUsuario = await this.usuarioService.findByUsuario(username)
+        const buscaUsuario = await this.usuarioService.findByUsuario(username);
 
         if(!buscaUsuario)
-            throw new HttpException('Usuário não encontrado!', HttpStatus.NOT_FOUND)
+            throw new HttpException('Usuário não encontrado!', HttpStatus.NOT_FOUND);
 
-        const matchPassword = await this.bcrypt.compararSenhas(password, buscaUsuario.senha)
+        const matchPassword = await this.bcrypt.compararSenhas(password, buscaUsuario.senha);
 
         if(buscaUsuario && matchPassword){
-            const { senha, ...resposta } = buscaUsuario
-            return resposta
+            const { senha, ...resposta } = buscaUsuario;
+            return resposta;
         }
 
         return null
 
     }
 
-    async login(usuarioLogin: UsuarioLogin){
+    async login(usuarioLogin: UsuarioLogin) {
 
-        const payload = { sub: usuarioLogin.usuario }
+        const usuarioValidado = await this.validateUser(
+            usuarioLogin.usuario,
+            usuarioLogin.senha
+        );
+            
+       if (!usuarioValidado)
+        throw new HttpException('Usuário ou senha inválidos!', HttpStatus.UNAUTHORIZED);
 
-        const buscaUsuario = await this.usuarioService.findByUsuario(usuarioLogin.usuario)
+    const payload = { sub: usuarioValidado.usuario };
 
-        return{
-            id: buscaUsuario?.id,
-            nome: buscaUsuario?.nome,
-            usuario: usuarioLogin.usuario,
-            senha: '',
-            foto: buscaUsuario?.foto,
-            token: `Bearer ${this.jwtService.sign(payload)}`,
-        }
+        return {
+            id: usuarioValidado.id,
+            nome: usuarioValidado.nome,
+            usuario: usuarioValidado.usuario,
+            foto: usuarioValidado.foto,
+            token: `Bearer ${this.jwtService.sign(payload)}`
+        };
 
     }
 }
